@@ -152,13 +152,23 @@ require('lazy').setup({
     },
   },
 
-  {
+ -- {
     -- Theme inspired by Atom
-    'navarasu/onedark.nvim',
-    priority = 1000,
-    config = function()
-      vim.cmd.colorscheme 'onedark'
-    end,
+ --   'navarasu/onedark.nvim',
+ --   priority = 1000,
+ --   config = function()
+ --     vim.cmd.colorscheme 'onedark'
+ --   end,
+ -- },
+
+  {
+    "ellisonleao/gruvbox.nvim",
+    priority = 1000 ,
+    config = true,
+    opts = ...,
+  },
+  {
+    vim.cmd.colorscheme 'gruvbox'
   },
 
   {
@@ -168,7 +178,7 @@ require('lazy').setup({
     opts = {
       options = {
         icons_enabled = false,
-        theme = 'onedark',
+        theme = 'gruvbox',
         component_separators = '|',
         section_separators = '',
       },
@@ -229,7 +239,7 @@ require('lazy').setup({
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --
   --    For additional information see: https://github.com/folke/lazy.nvim#-structuring-your-plugins
-  -- { import = 'custom.plugins' },
+  { import = 'custom.plugins' },
 }, {})
 
 -- [[ Setting options ]]
@@ -242,8 +252,11 @@ vim.o.hlsearch = false
 -- Make line numbers default
 vim.wo.number = true
 
--- Enable mouse mode
-vim.o.mouse = 'a'
+-- Make relative numbers default
+vim.wo.relativenumber = true
+
+-- DISABLE mouse mode
+vim.o.mouse = ''
 
 -- Sync clipboard between OS and Neovim.
 --  Remove this option if you want your OS clipboard to remain independent.
@@ -289,10 +302,29 @@ vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next diagnos
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Open floating diagnostic message' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostics list' })
 
+-- [[ Keymaps for navigation ]]
+-- Buffer navigation
+vim.keymap.set('n', 'H', '<cmd>:bp<cr>', { desc = 'Go to previous buffer'})
+vim.keymap.set('n', 'L', '<cmd>:bn<cr>', { desc = 'Go to next buffer'})
+
+-- Window navigation
+vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Go to next window to the left'})
+vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Go to next window below'})
+vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Go to next window above'})
+vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Go to next window to the right'})
+
+-- Split window
+vim.keymap.set('n', '-', '<C-w>s', { desc = 'Add horizontal split'})
+vim.keymap.set('n', '|', '<C-w>v', { desc = 'Add vertical split'})
+
+-- NeoTree
+vim.keymap.set('n', '<Leader>e', '<cmd>:Neotree toggle<CR>', { desc = 'Toggle NeoTree'})
+
+
+
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
-vim.api.nvim_create_autocmd('TextYankPost', {
+local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }) vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.highlight.on_yank()
   end,
@@ -470,7 +502,7 @@ local on_attach = function(_, bufnr)
 
   -- See `:help K` for why this keymap
   nmap('K', vim.lsp.buf.hover, 'Hover Documentation')
-  nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
+  -- nmap('<C-k>', vim.lsp.buf.signature_help, 'Signature Documentation')
 
   -- Lesser used LSP functionality
   nmap('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
