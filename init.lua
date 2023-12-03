@@ -233,7 +233,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.autoformat',
   -- require 'kickstart.plugins.debug',
 
-  -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
+    -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    You can use this folder to prevent any conflicts with this init.lua if you're interested in keeping
   --    up-to-date with whatever is in the kickstart repo.
   --    Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
@@ -324,13 +324,37 @@ vim.keymap.set('n', '<Leader>e', '<cmd>:Neotree toggle<CR>', { desc = 'Toggle Ne
 
 -- [[ Highlight on yank ]]
 -- See `:help vim.highlight.on_yank()`
-local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true }) vim.api.nvim_create_autocmd('TextYankPost', {
+local highlight_group = vim.api.nvim_create_augroup('YankHighlight', { clear = true })
+vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.highlight.on_yank()
   end,
   group = highlight_group,
   pattern = '*',
 })
+
+ -- When opening an existing file, jump to the last line
+local buffer_group = vim.api.nvim_create_augroup('buffer', { clear = true })
+vim.api.nvim_create_autocmd('BufReadPost', {
+  command = [[if line("'\"") > 1 && line("'\"") <= line("$") | execute "normal! g`\"" | endif]],
+  group = buffer_group,
+})
+
+-- windows to close with "q"
+local window_group = vim.api.nvim_create_augroup('WindowGroup', {clear = true})
+vim.api.nvim_create_autocmd(
+  "FileType", {
+    pattern = { "help", "startuptime", "qf", "lspinfo" },
+    command = [[nnoremap <buffer><silent> q :close<CR>]],
+    group = window_group,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "man",
+  command = [[nnoremap <buffer><silent> q :quit<CR>]],
+  group = window_group,
+})
+
 
 -- [[ Configure Telescope ]]
 -- See `:help telescope` and `:help telescope.setup()`
