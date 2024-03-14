@@ -1,4 +1,5 @@
 --[[ini
+--
 
 =====================================================================
 ==================== READ THIS BEFORE CONTINUING ====================
@@ -228,6 +229,8 @@ vim.keymap.set('x', 'J', ":move '>+1<CR>gv-gv")
 vim.keymap.set('x', 'K', ":move '<-2<CR>gv-gv")
 vim.keymap.set('x', '<A-j>', ":move '>+1<CR>gv-gv")
 vim.keymap.set('x', '<A-k>', ":move '<-2<CR>gv-gv")
+
+-- vim.keymap.set('n', '<leader>gg', '<cmd>lua _LAZYGIT_TOGGLE()<CR>', { desc = 'Toggle Lazygit' })
 
 -- TIP: Disable arrow keys in normal mode
 -- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
@@ -646,7 +649,14 @@ require('lazy').setup {
         -- gopls = {},
         pyright = {},
         bashls = {},
-        -- rust_analyzer = {},
+        rust_analyzer = {
+          cmd = {
+            'rustup',
+            'run',
+            'stable',
+            'rust-analyzer',
+          },
+        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -940,6 +950,7 @@ require('lazy').setup {
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
 
+  require 'custom.plugins.autopairs',
   require 'custom.plugins.nvim-tree',
 
   require 'custom.plugins.quickfixdd',
