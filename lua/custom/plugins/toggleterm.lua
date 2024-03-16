@@ -22,43 +22,10 @@ return {
         background = 'Normal',
       },
     },
-
-    config = function()
+    vim.keymap.set('n', '<leader>gg', function()
       local Terminal = require('toggleterm.terminal').Terminal
       local lazygit = Terminal:new { cmd = 'lazygit', hidden = true }
-      function _LAZYGIT_TOGGLE()
-        lazygit:toggle()
-      end
-
-      local node = Terminal:new { cmd = 'node', hidden = true }
-
-      function _NODE_TOGGLE()
-        node:toggle()
-      end
-
-      local ncdu = Terminal:new { cmd = 'ncdu', hidden = true }
-
-      function _NCDU_TOGGLE()
-        ncdu:toggle()
-      end
-
-      local htop = Terminal:new { cmd = 'htop', hidden = true }
-
-      function _HTOP_TOGGLE()
-        htop:toggle()
-      end
-
-      local python = Terminal:new { cmd = 'python', hidden = true }
-
-      function _PYTHON_TOGGLE()
-        python:toggle()
-      end
-
-      local make = Terminal:new { cmd = 'make', hidden = true, close_on_exit = false }
-
-      function _MAKE_TOGGLE()
-        make:toggle()
-      end
-    end,
+      lazygit:toggle()
+    end, { noremap = true, silent = true, desc = 'Toggle Lazygit' }),
   },
 }
