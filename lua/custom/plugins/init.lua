@@ -2,4 +2,13 @@
 --  I promise not to create any merge conflicts in this directory :)
 --
 -- See the kickstart.nvim README for more information
-return {}
+return {
+  require 'custom.plugins.autopairs',
+  require 'custom.plugins.nvim-tree',
+
+  require 'custom.plugins.quickfixdd',
+  require 'custom.plugins.vim-tmux-navigator',
+
+  require 'custom.plugins.toggleterm',
+  require 'custom.plugins.dial',
+}
