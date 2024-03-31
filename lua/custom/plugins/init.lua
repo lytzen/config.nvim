@@ -3,7 +3,12 @@
 --
 -- See the kickstart.nvim README for more information
 return {
+  require 'custom.plugins.colorscheme',
+  require 'custom.plugins.lualine',
   require 'custom.plugins.autopairs',
+  require 'custom.plugins.gitsigns',
+  require 'custom.plugins.telescope',
+  require 'custom.plugins.treesitter',
   require 'custom.plugins.nvim-tree',
 
   require 'custom.plugins.quickfixdd',
