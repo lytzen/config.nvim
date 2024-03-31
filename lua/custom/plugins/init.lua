@@ -7,6 +7,7 @@ return {
   require 'custom.plugins.lualine',
   require 'custom.plugins.autopairs',
   require 'custom.plugins.gitsigns',
+  require 'custom.plugins.project',
   require 'custom.plugins.telescope',
   require 'custom.plugins.treesitter',
   require 'custom.plugins.nvim-tree',

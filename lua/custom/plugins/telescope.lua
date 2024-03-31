@@ -65,9 +65,21 @@ return {
     }
 
     -- Enable telescope extensions, if they are installed
-    pcall(require('telescope').load_extension, 'fzf')
-    pcall(require('telescope').load_extension, 'ui-select')
+    local okay, res = pcall(require('telescope').load_extension, 'fzf')
+    if not okay then
+      vim.notify(res, vim.log.levels.WARN)
+    end
+    okay, res = pcall(require('telescope').load_extension, 'ui-select')
+    if not okay then
+      vim.notify(res, vim.log.levels.WARN)
+    end
+    okay, res = pcall(require('telescope').load_extension, 'projects')
+    if not okay then
+      vim.notify(res, vim.log.levels.WARN)
+    end
 
+    local projects = require('telescope').extensions.projects
+    vim.keymap.set('n', '<leader>sp', projects.projects, { desc = '[S]how resent [P]rojects' })
     -- See `:help telescope.builtin`
     local builtin = require 'telescope.builtin'
     vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
