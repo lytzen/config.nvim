@@ -5,6 +5,9 @@ return {
   config = function()
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
 
+    -- Install through git, otherwise you cannot get through the TERMA network.
+    require('nvim-treesitter.install').prefer_git = true
+
     ---@diagnostic disable-next-line: missing-fields
     require('nvim-treesitter.configs').setup {
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'json', 'yaml', 'python' },
