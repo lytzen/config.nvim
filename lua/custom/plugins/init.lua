@@ -17,4 +17,5 @@ return {
 
   require 'custom.plugins.toggleterm',
   require 'custom.plugins.dial',
+  require 'custom.plugins.schemastore',
 }
