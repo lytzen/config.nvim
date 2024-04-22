@@ -6,7 +6,16 @@ return {
     require('lspconfig').jsonls.setup {
       settings = {
         json = {
-          schemas = require('schemastore').json.schemas(),
+          schemas = require('schemastore').json.schemas {
+            extra = {
+              {
+                description = 'TERMA ADLS Site Config',
+                FileMatch = 'site_config.json',
+                name = 'site_config.json',
+                url = '/home/mlh/projects/lcs/salic/config/src/main/schemas/site_config_schema.json',
+              },
+            },
+          },
           validate = { enable = true },
         },
       },
