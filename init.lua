@@ -665,6 +665,7 @@ require('lazy').setup {
           { name = 'luasnip' },
           { name = 'buffer' },
           { name = 'path' },
+          { name = 'codeium' },
           -- { name = 'cmdline' },
         },
       }
