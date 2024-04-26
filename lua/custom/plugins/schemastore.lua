@@ -7,12 +7,12 @@ return {
       settings = {
         json = {
           schemas = require('schemastore').json.schemas {
-            extras = {
+            extra = {
               {
-                description = 'TERMA SALIC site config JSON schema',
-                fileMatch = 'site_config.json',
-                name = 'site_config_schema.json',
-                url = 'file:///Users/mlh/work/lcs/salic/config/src/main/schemas/site_config_schema.json',
+                description = 'TERMA ADLS Site Config',
+                FileMatch = 'site_config.json',
+                name = 'site_config.json',
+                url = '/home/mlh/projects/lcs/salic/config/src/main/schemas/site_config_schema.json',
               },
             },
           },
