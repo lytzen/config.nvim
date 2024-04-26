@@ -99,6 +99,9 @@ vim.g.maplocalleader = ' '
 -- Make line numbers default
 vim.opt.number = true
 vim.opt.relativenumber = true
+vim.opt.tabstop = 2
+vim.opt.expandtab = true
+vim.opt.shiftwidth = 2
 -- You can also add relative line numbers, for help with jumping.
 --  Experiment for yourself to see if you like it!
 -- vim.opt.relativenumber = true
