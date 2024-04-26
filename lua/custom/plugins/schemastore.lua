@@ -6,7 +6,16 @@ return {
     require('lspconfig').jsonls.setup {
       settings = {
         json = {
-          schemas = require('schemastore').json.schemas(),
+          schemas = require('schemastore').json.schemas {
+            extras = {
+              {
+                description = 'TERMA SALIC site config JSON schema',
+                fileMatch = 'site_config.json',
+                name = 'site_config_schema.json',
+                url = 'file:///Users/mlh/work/lcs/salic/config/src/main/schemas/site_config_schema.json',
+              },
+            },
+          },
           validate = { enable = true },
         },
       },
