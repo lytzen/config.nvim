@@ -109,6 +109,9 @@ vim.opt.shiftwidth = 2
 -- NO!
 vim.opt.mouse = ''
 
+-- Folding
+vim.opt.foldmethod = 'expr'
+vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
 -- Don't show the mode, since it's already in status line
 vim.opt.showmode = false
 
