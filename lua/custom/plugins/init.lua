@@ -19,4 +19,5 @@ return {
   require 'custom.plugins.dial',
   require 'custom.plugins.schemastore',
   require 'custom.plugins.codeium',
+  require 'custom.plugins.nvim-java',
 }
