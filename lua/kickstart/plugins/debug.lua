@@ -13,12 +13,14 @@ return {
   dependencies = {
     -- Creates a beautiful debugger UI
     'rcarriga/nvim-dap-ui',
+    'theHamsta/nvim-dap-virtual-text',
 
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
+    'mfussenegger/nvim-dap-python',
     'leoluz/nvim-dap-go',
     'nvim-neotest/nvim-nio',
   },
@@ -44,20 +46,24 @@ return {
     }
 
     -- Basic debugging keymaps, feel free to change to your liking!
-    vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
-    vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
-    vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
-    vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
-    vim.keymap.set('n', '<leader>b', dap.toggle_breakpoint, { desc = 'Debug: Toggle Breakpoint' })
-    vim.keymap.set('n', '<leader>B', function()
-      dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
-    end, { desc = 'Debug: Set Breakpoint' })
+    vim.keymap.set('n', '<leader>Dc', dap.continue, { desc = '[D]ebug: Start/[C]ontinue' })
+    vim.keymap.set('n', '<leader>DR', dap.run_to_cursor, { desc = '[D]ebug: Start/[C]ontinue' })
+    vim.keymap.set('n', '<leader>Di', dap.step_into, { desc = 'Debug: Step Into' })
+    vim.keymap.set('n', '<leader>Do', dap.step_over, { desc = 'Debug: Step Over' })
+    vim.keymap.set('n', '<leader>Du', dap.step_out, { desc = 'Debug: Step Out' })
+    vim.keymap.set('n', '<leader>Db', dap.toggle_breakpoint, { desc = '[D]ebug: Toggle [B]reakpoint' })
+    vim.keymap.set('n', '<leader>DB', function()
+      dap.set_breakpoint(vim.fn.input '[Condition] > ')
+    end, { desc = '[D]ebug: Set [B]reakpoint' })
+
+    vim.keymap.set('n', '<leader>Dq', dap.close, { desc = '[D]ebug: [Q]uit' })
+    vim.keymap.set('n', '<leader>Dx', dap.terminate, { desc = '[D]ebug: [T]erminate' })
 
     -- Dap UI setup
     -- For more information, see |:help nvim-dap-ui|
     dapui.setup {
       -- Set icons to characters that are more likely to work in every terminal.
-      --    Feel free to remove or use ones that you like more! :)
+      --    Feel fr
       --    Don't feel like these are good choices.
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
       controls = {
@@ -76,7 +82,11 @@ return {
     }
 
     -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    vim.keymap.set('n', '<leader>DU', dapui.toggle, { desc = '[D]ebug: [U]I See last session result.' })
+    vim.keymap.set({ 'n', 'v' }, '<leader>De', dapui.eval, { desc = '[D]ebug: Evaluate [E]xpression.' })
+    vim.keymap.set('n', '<leader>DE', function()
+      dapui.eval(vim.fn.input '[Expression] > ')
+    end, { desc = '[D]ebug: Evaluate [E]xpression.' })
 
     dap.listeners.after.event_initialized['dapui_config'] = dapui.open
     dap.listeners.before.event_terminated['dapui_config'] = dapui.close
@@ -84,5 +94,11 @@ return {
 
     -- Install golang specific config
     require('dap-go').setup()
+
+    -- Initialize python config
+    -- debugpy is installed in the pyenv "debugpy", hence the
+    -- reference to python in the pyenv shims.
+    -- (The installation instructions recommended this approach)
+    require('dap-python').setup '~/.pyenv/shims/python'
   end,
 }
