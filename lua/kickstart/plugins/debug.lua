@@ -93,7 +93,7 @@ return {
     dap.listeners.before.event_exited['dapui_config'] = dapui.close
 
     -- Install golang specific config
-    require('dap-go').setup()
+    -- require('dap-go').setup()
 
     -- Initialize python config
     -- debugpy is installed in the pyenv "debugpy", hence the
