@@ -17,6 +17,8 @@ return {
 
   require 'custom.plugins.toggleterm',
   require 'custom.plugins.dial',
+  require 'custom.plugins.neogit',
+
   require 'custom.plugins.schemastore',
   require 'custom.plugins.codeium',
   require 'custom.plugins.nvim-java',
