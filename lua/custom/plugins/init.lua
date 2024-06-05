@@ -22,6 +22,7 @@ return {
   require 'custom.plugins.schemastore',
   require 'custom.plugins.codeium',
   require 'custom.plugins.nvim-java',
+  require 'custom.plugins.pkl',
 
   require 'custom.plugins.test',
 }
