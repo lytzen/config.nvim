@@ -1,5 +1,6 @@
 return {
   'monaqa/dial.nvim',
+  lazy = true,
   dependencies = {
     'nvim-lua/plenary.nvim',
   },

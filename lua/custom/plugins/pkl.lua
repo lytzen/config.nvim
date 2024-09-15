@@ -6,6 +6,10 @@ return {
       'BufReadPre *.pkl',
       'BufReadPre *.pcf',
       'BufReadPre PklProject',
+      ft = {
+        'pkl',
+        'pcf',
+      },
     },
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
