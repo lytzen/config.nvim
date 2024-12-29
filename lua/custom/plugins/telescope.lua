@@ -57,11 +57,17 @@ return {
       --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
       --   },
       -- },
-      -- pickers = {}
+      pickers = {
+        find_files = {
+          -- The ivy theme makes the picker pop up from the bottom.
+          theme = 'ivy',
+        },
+      },
       extensions = {
         ['ui-select'] = {
           require('telescope.themes').get_dropdown(),
         },
+        fzf = {},
       },
     }
 
