@@ -237,6 +237,15 @@ vim.keymap.set('x', 'K', ":move '<-2<CR>gv-gv")
 vim.keymap.set('x', '<A-j>', ":move '>+1<CR>gv-gv")
 vim.keymap.set('x', '<A-k>', ":move '<-2<CR>gv-gv")
 
+-- Executing inline LUA --
+vim.keymap.set('n', '<leader><leader>x', '<cmd>source %<CR>', { desc = 'Source current file' })
+vim.keymap.set('n', '<leader>x', ':.lua<CR>', { desc = 'Run current lua line' })
+vim.keymap.set('v', '<leader>x', ': lua<CR>', { desc = 'Run selected lua lines' })
+
+-- Additional comment mappings
+-- Comment and paste line below
+-- vim.keymap.set('n', 'gcd', 'yygccp', { desc = '[C]omment line and [D]ublicate blow' })
+
 -- vim.keymap.set('n', '<leader>gg', '<cmd>lua _LAZYGIT_TOGGLE()<CR>', { desc = 'Toggle Lazygit' })
 
 -- TIP: Disable arrow keys in normal mode
@@ -387,7 +396,7 @@ require('lazy').setup {
 
   { -- LSP Configuration & Plugins
     'neovim/nvim-lspconfig',
-    lazy = true,
+    -- lazy = true,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
       'williamboman/mason.nvim',
