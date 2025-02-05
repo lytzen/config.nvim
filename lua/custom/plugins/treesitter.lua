@@ -31,6 +31,7 @@ return {
         'yaml',
         'python',
         'dockerfile',
+        'java',
       },
       -- Autoinstall languages that are not installed
       auto_install = true,

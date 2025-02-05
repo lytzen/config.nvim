@@ -27,6 +27,5 @@ return {
 
   require 'custom.plugins.test',
   require 'custom.plugins.nvim-dev-container',
-
   -- require 'custom.plugins.todotxt',
 }

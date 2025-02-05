@@ -252,23 +252,6 @@ vim.keymap.set('v', '<leader>x', ': lua<CR>', { desc = 'Run selected lua lines' 
 -- Comment and paste line below
 -- vim.keymap.set('n', 'gcd', 'yygccp', { desc = '[C]omment line and [D]ublicate blow' })
 
--- vim.keymap.set('n', '<leader>gg', '<cmd>lua _LAZYGIT_TOGGLE()<CR>', { desc = 'Toggle Lazygit' })
-
--- TIP: Disable arrow keys in normal mode
--- vim.keymap.set('n', '<left>', '<cmd>echo "Use h to move!!"<CR>')
--- vim.keymap.set('n', '<right>', '<cmd>echo "Use l to move!!"<CR>')
--- vim.keymap.set('n', '<up>', '<cmd>echo "Use k to move!!"<CR>')
--- vim.keymap.set('n', '<down>', '<cmd>echo "Use j to move!!"<CR>')
-
--- Keybinds to make split navigation easier.
---  Use CTRL+<hjkl> to switch between windows
---
---  See `:help wincmd` for a list of all window commands
--- vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
--- vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
--- vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
--- vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
-
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
 
@@ -318,7 +301,13 @@ require('lazy').setup {
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    opts = function()
+      local ft = require 'Comment.ft'
+      ft.set('spec', ft.get 'sh')
+    end,
+  },
 
   -- NOTE: Plugins can also be configured to run lua code when they are loaded.
   --
@@ -405,13 +394,19 @@ require('lazy').setup {
     -- lazy = true,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependencies
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
+      'nvim-java/nvim-java',
       {
-        'folke/neodev.nvim',
+        'folke/lazydev.nvim', -- neodev has been deprecated
+        ft = 'lua',
         opts = {
-          library = { plugins = { 'neotest', 'nvim-dap-ui' }, types = true },
+          library = {
+            -- See the configuration section for more details
+            -- Load luvit types when the `vim.uv` word is found
+            { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+          },
         },
       },
 
@@ -510,13 +505,16 @@ require('lazy').setup {
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
           if client and client.server_capabilities.documentHighlightProvider then
+            local highlight_augroup = vim.api.nvim_create_augroup('lsp_highlight', { clear = false })
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
+              group = highlight_augroup,
               callback = vim.lsp.buf.document_highlight,
             })
 
             vim.api.nvim_create_autocmd({ 'CursorMoved', 'CursorMovedI' }, {
               buffer = event.buf,
+              group = highlight_augroup,
               callback = vim.lsp.buf.clear_references,
             })
           end
@@ -559,18 +557,18 @@ require('lazy').setup {
           -- capabilities = {},
           settings = {
             Lua = {
-              runtime = { version = 'LuaJIT' },
-              workspace = {
-                checkThirdParty = false,
-                -- Tells lua_ls where to find all the Lua files that you have loaded
-                -- for your neovim configuration.
-                library = {
-                  '${3rd}/luv/library',
-                  unpack(vim.api.nvim_get_runtime_file('', true)),
-                },
-                -- If lua_ls is really slow on your computer, you can try this instead:
-                -- library = { vim.env.VIMRUNTIME },
-              },
+              -- runtime = { version = 'LuaJIT' },
+              -- workspace = {
+              --   checkThirdParty = false,
+              --   -- Tells lua_ls where to find all the Lua files that you have loaded
+              --   -- for your neovim configuration.
+              --   library = {
+              --     '${3rd}/luv/library',
+              --     unpack(vim.api.nvim_get_runtime_file('', true)),
+              --   },
+              --   -- If lua_ls is really slow on your computer, you can try this instead:
+              --   -- library = { vim.env.VIMRUNTIME },
+              -- },
               completion = {
                 callSnippet = 'Replace',
               },
@@ -610,6 +608,14 @@ require('lazy').setup {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+          jdtls = function()
+            require('java').setup {
+              -- Custom jdtls setup
+            }
+            require('lspconfig').jdtls.setup {
+              -- Custom nvim-java setup
+            }
+          end,
         },
       }
     end,
@@ -619,10 +625,16 @@ require('lazy').setup {
     'stevearc/conform.nvim',
     opts = {
       notify_on_error = false,
-      format_on_save = {
-        timeout_ms = 500,
-        lsp_fallback = true,
-      },
+      format_on_save = function(bufnr)
+        -- Disable "format_on_save lsp_fallback" for languages that don't
+        -- have a well standardized coding style. You can add additional
+        -- languages here or re-enable it for the disabled ones.
+        local disable_filetypes = { c = true, cpp = true }
+        return {
+          timeout_ms = 500,
+          lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+        }
+      end,
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
@@ -645,11 +657,6 @@ require('lazy').setup {
         'L3MON4D3/LuaSnip',
         build = (function()
           -- Build Step is needed for regex support in snippets
-          -- This step is not supported in many windows environments
-          -- Remove the below condition to re-enable on windows
-          if vim.fn.has 'win32' == 1 or vim.fn.executable 'make' == 0 then
-            return
-          end
           return 'make install_jsregexp'
         end)(),
       },
@@ -727,7 +734,7 @@ require('lazy').setup {
           { name = 'luasnip' },
           { name = 'buffer' },
           { name = 'path' },
-          { name = 'codeium' },
+          { name = 'codeium' }, -- Making trouble after update.
           -- { name = 'cmdline' },
         },
       }

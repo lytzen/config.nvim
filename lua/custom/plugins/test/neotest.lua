@@ -8,7 +8,7 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'nvim-neotest/neotest-plenary',
       'nvim-neotest/neotest-vim-test',
-      'folke/neodev.nvim',
+      'folke/lazydev.nvim',
       'stevearc/overseer.nvim',
     },
     keys = {
