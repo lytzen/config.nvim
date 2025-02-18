@@ -301,13 +301,7 @@ require('lazy').setup {
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  {
-    'numToStr/Comment.nvim',
-    opts = function()
-      local ft = require 'Comment.ft'
-      ft.set('spec', ft.get 'sh')
-    end,
-  },
+  { 'numToStr/Comment.nvim', opts = {} },
 
   -- NOTE: Plugins can also be configured to run lua code when they are loaded.
   --
@@ -394,7 +388,7 @@ require('lazy').setup {
     -- lazy = true,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
-      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependencies
+      'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       'nvim-java/nvim-java',
@@ -607,14 +601,6 @@ require('lazy').setup {
             -- certain features of an LSP (for example, turning off formatting for tsserver)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
-          end,
-          jdtls = function()
-            require('java').setup {
-              -- Custom jdtls setup
-            }
-            require('lspconfig').jdtls.setup {
-              -- Custom nvim-java setup
-            }
           end,
         },
       }
