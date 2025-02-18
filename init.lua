@@ -538,15 +538,6 @@ require('lazy').setup {
         -- gopls = {},
         pyright = {},
         bashls = {},
-        jdtls = {},
-        rust_analyzer = {
-          cmd = {
-            'rustup',
-            'run',
-            'stable',
-            'rust-analyzer',
-          },
-        },
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
         -- Some languages (like typescript) have entire language plugins that can be useful:
@@ -599,6 +590,9 @@ require('lazy').setup {
         'stylua', -- Used to format lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
+
+      require('java').setup()
+      require('lspconfig').jdtls.setup {}
 
       require('mason-lspconfig').setup {
         handlers = {
