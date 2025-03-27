@@ -118,7 +118,7 @@ vim.opt.mouse = ''
 -- Folding
 vim.opt.foldmethod = 'expr'
 vim.opt.foldexpr = 'nvim_treesitter#foldexpr()'
-vim.opt.foldlevel = 6
+vim.opt.foldlevel = 99
 
 -- Don't show the mode, since it's already in status line
 vim.opt.showmode = false
@@ -272,7 +272,7 @@ local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   local lazyrepo = 'https://github.com/folke/lazy.nvim.git'
   vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
-end ---@diagnostic disable-next-line: undefined-field
+end
 vim.opt.rtp:prepend(lazypath)
 
 -- [[ Configure and install plugins ]]
@@ -286,8 +286,8 @@ vim.opt.rtp:prepend(lazypath)
 --    :Lazy update
 --
 -- NOTE: Here is where you install your plugins.
-require('lazy').setup {
-  defaults = { lazy = true, version = nil },
+require('lazy').setup({
+  -- defaults = { lazy = true, version = nil },
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
@@ -388,10 +388,17 @@ require('lazy').setup {
     -- lazy = true,
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for neovim
-      'williamboman/mason.nvim',
+      { 'williamboman/mason.nvim', config = true }, -- NOTE: Must be loaded before dependants
       'williamboman/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
       'nvim-java/nvim-java',
+
+      -- Useful status updates for LSP.
+      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
+      { 'j-hui/fidget.nvim', opts = {} },
+
+      -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+      -- used for completion, annotations and signatures of Neovim apis
       {
         'folke/lazydev.nvim', -- neodev has been deprecated
         ft = 'lua',
@@ -403,10 +410,6 @@ require('lazy').setup {
           },
         },
       },
-
-      -- Useful status updates for LSP.
-      -- NOTE: `opts = {}` is the same as calling `require('fidget').setup({})`
-      { 'j-hui/fidget.nvim', lazy = true, opts = {} },
     },
     config = function()
       -- Brief Aside: **What is LSP?**
@@ -532,6 +535,22 @@ require('lazy').setup {
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
+        -- jdtls = {
+        --   -- Additional setup
+        --   settings = {
+        --     java = {
+        --       configuration = {
+        --         runtimes = {
+        --           {
+        --             name = 'JavaSE-17',
+        --             path = '/home/mlh/.sdkman/candidates/java/17.0.14-tem',
+        --             default = true,
+        --           },
+        --         },
+        --       },
+        --     },
+        --   },
+        -- },
         clangd = {},
         -- gopls = {},
         pyright = {},
@@ -580,12 +599,11 @@ require('lazy').setup {
       --
       --  You can press `g?` for help in this menu
       require('mason').setup()
-
       -- You can add other tools here that you want Mason to install
       -- for you, so that they are available from within Neovim.
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'stylua', -- Used to format lua code
+        stylua = {}, -- Used to format lua code
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -593,6 +611,8 @@ require('lazy').setup {
       require('lspconfig').jdtls.setup {}
 
       require('mason-lspconfig').setup {
+        ensure_installed = {},
+        automatic_installation = true,
         handlers = {
           function(server_name)
             local server = servers[server_name] or {}
@@ -602,6 +622,17 @@ require('lazy').setup {
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
+          -- local java = '/home/mlh/.local/share/nvim/mason/packages/openjdk-17/jdk-17.0.2'
+          -- vim.uv.os_setenv('JAVA_HOME', java)
+          -- vim.uv.os_setenv('JAVA_BINDIR', java .. '/bin')
+          -- vim.uv.os_setenv('JDK_HOME', java)
+          -- vim.uv.os_setenv('SDK_HOME', java)
+          -- vim.uv.os_setenv('JRE_HOME', java)
+          -- print('JAVA_HOME: ' .. vim.uv.os_getenv 'JAVA_HOME')
+          -- print('JAVA_BINDIR: ' .. vim.uv.os_getenv 'JAVA_BINDIR')
+          -- print('JDK_HOME: ' .. vim.uv.os_getenv 'JDK_HOME')
+          -- print('SDK_HOME: ' .. vim.uv.os_getenv 'SDK_HOME')
+          -- print('JRE_HOME: ' .. vim.uv.os_getenv 'JRE_HOME')
         },
       }
     end,
@@ -609,6 +640,18 @@ require('lazy').setup {
 
   { -- Autoformat
     'stevearc/conform.nvim',
+    event = { 'BufWritePre' },
+    cmd = { 'ConformInfo' },
+    keys = {
+      {
+        '<leader>f',
+        function()
+          require('conform').format { async = true, lsp_fallback = true }
+        end,
+        mode = '',
+        desc = '[F]ormat buffer',
+      },
+    },
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -716,6 +759,11 @@ require('lazy').setup {
           end, { 'i', 's' }),
         },
         sources = {
+          {
+            name = 'lazydev',
+            -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
+            group_index = 0,
+          },
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'buffer' },
@@ -789,15 +837,33 @@ require('lazy').setup {
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
 
-  -- require 'custom.plugins',
-
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
   --
   --  Uncomment the following line and add your plugins to `lua/custom/plugins/*.lua` to get going.
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
-}
+}, {
+  ui = {
+    -- If you are using a Nerd Font: set icons to an empty table which will use the
+    -- default lazy.nvim defined Nerd Font icons, otherwise define a unicode icons table
+    icons = vim.g.have_nerd_font and {} or {
+      cmd = '⌘',
+      config = '🛠',
+      event = '📅',
+      ft = '📂',
+      init = '⚙',
+      keys = '🗝',
+      plugin = '🔌',
+      runtime = '💻',
+      require = '🌙',
+      source = '📄',
+      start = '🚀',
+      task = '📌',
+      lazy = '💤 ',
+    },
+  },
+})
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
