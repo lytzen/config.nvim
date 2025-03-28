@@ -24,7 +24,7 @@ return {
         'markdown_inline',
         'regex',
         'vim',
-        'latex',
+        -- 'latex', -- Tresitter panics when building this, so I have removed it for now.
         'vimdoc',
         'json',
         'yaml',
