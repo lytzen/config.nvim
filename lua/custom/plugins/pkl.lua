@@ -1,6 +1,7 @@
 return {
   {
     'https://github.com/apple/pkl-neovim',
+    enabled = false,
     lazy = true,
     event = {
       'BufReadPre *.pkl',

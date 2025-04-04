@@ -21,11 +21,12 @@ return {
 
   require 'custom.plugins.schemastore',
   require 'custom.plugins.codeium',
-  require 'custom.plugins.nvim-java',
+  -- require 'custom.plugins.nvim-java',
   require 'custom.plugins.pkl',
   require 'custom.plugins.headlines',
 
   require 'custom.plugins.test',
   require 'custom.plugins.nvim-dev-container',
+  require 'custom.plugins.lint',
   -- require 'custom.plugins.todotxt',
 }

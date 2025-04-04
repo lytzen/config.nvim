@@ -16,13 +16,15 @@ return {
     'rcarriga/nvim-dap-ui',
     'theHamsta/nvim-dap-virtual-text',
 
+    -- Required dependacy for nvim-dap-ui
+    'nvim-neotest/nvim-nio',
+
     -- Installs the debug adapters for you
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
 
     -- Add your own debuggers here
     'mfussenegger/nvim-dap-python',
-    'nvim-neotest/nvim-nio',
   },
   config = function()
     local dap = require 'dap'
@@ -31,7 +33,7 @@ return {
     require('mason-nvim-dap').setup {
       -- Makes a best effort to setup the various debuggers with
       -- reasonable debug configurations
-      automatic_setup = true,
+      automatic_installation = true,
 
       -- You can provide additional configuration to the handlers,
       -- see mason-nvim-dap README for more information
@@ -124,6 +126,15 @@ return {
         args = {},
         env = {},
         terminalKind = 'integrated',
+      },
+    }
+    dap.configurations.java = {
+      {
+        type = 'java',
+        request = 'attach',
+        name = "Debug (Attach) - Remote",
+        hostname = "127.0.0.1",
+        port = 5007,
       },
     }
     require('dap-python').setup '~/.pyenv/shims/python'

@@ -20,11 +20,12 @@ return {
         'c',
         'html',
         'lua',
+        'luadoc',
         'markdown',
         'markdown_inline',
         'regex',
-        'latex',
         'vim',
+        -- 'latex', -- Tresitter panics when building this, so I have removed it for now.
         'vimdoc',
         'json',
         'yaml',
