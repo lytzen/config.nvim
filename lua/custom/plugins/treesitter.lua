@@ -20,6 +20,7 @@ return {
         'c',
         'html',
         'lua',
+        'luadoc',
         'markdown',
         'markdown_inline',
         'regex',

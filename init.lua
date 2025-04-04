@@ -607,7 +607,20 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
-      require('java').setup()
+      require('java').setup({
+        -- Removing .git from root_markers in an attempt to make jdtls find the main class for debugging
+        -- https://github.com/nvim-java/nvim-java/wiki/Troubleshooting
+        -- root_markers = {
+        --   'settings.gradle',
+        --   'settings.gradle.kts',
+        --   'pom.xml',
+        --   'build.gradle',
+        --   'mvnw',
+        --   'gradlew',
+        --   'build.gradle',
+        --   'build.gradle.kts'
+        -- },
+      })
       require('lspconfig').jdtls.setup {}
 
       require('mason-lspconfig').setup {
@@ -622,17 +635,6 @@ require('lazy').setup({
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
           end,
-          -- local java = '/home/mlh/.local/share/nvim/mason/packages/openjdk-17/jdk-17.0.2'
-          -- vim.uv.os_setenv('JAVA_HOME', java)
-          -- vim.uv.os_setenv('JAVA_BINDIR', java .. '/bin')
-          -- vim.uv.os_setenv('JDK_HOME', java)
-          -- vim.uv.os_setenv('SDK_HOME', java)
-          -- vim.uv.os_setenv('JRE_HOME', java)
-          -- print('JAVA_HOME: ' .. vim.uv.os_getenv 'JAVA_HOME')
-          -- print('JAVA_BINDIR: ' .. vim.uv.os_getenv 'JAVA_BINDIR')
-          -- print('JDK_HOME: ' .. vim.uv.os_getenv 'JDK_HOME')
-          -- print('SDK_HOME: ' .. vim.uv.os_getenv 'SDK_HOME')
-          -- print('JRE_HOME: ' .. vim.uv.os_getenv 'JRE_HOME')
         },
       }
     end,
