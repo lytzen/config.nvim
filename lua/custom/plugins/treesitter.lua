@@ -22,7 +22,6 @@ return {
         'lua',
         'markdown',
         'markdown_inline',
-        'org',
         'regex',
         'latex',
         'vim',

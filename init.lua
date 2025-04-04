@@ -172,8 +172,6 @@ vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' })
-vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = 'Go to next [D]iagnostic message' })
 vim.keymap.set('n', '<leader>k', vim.diagnostic.open_float, { desc = 'Show diagnostic [K]rror messages' })
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
 
@@ -245,8 +243,8 @@ vim.keymap.set('x', '<A-k>', ":move '<-2<CR>gv-gv")
 
 -- Executing inline LUA --
 vim.keymap.set('n', '<leader><leader>x', '<cmd>source %<CR>', { desc = 'Source current file' })
-vim.keymap.set('n', '<leader>x', ':.lua<CR>', { desc = 'Run current lua line' })
-vim.keymap.set('v', '<leader>x', ': lua<CR>', { desc = 'Run selected lua lines' })
+vim.keymap.set('n', '<leader>X', ':.lua<CR>', { desc = 'Run current lua line' })
+vim.keymap.set('v', '<leader>X', ': lua<CR>', { desc = 'Run selected lua lines' })
 
 -- Additional comment mappings
 -- Comment and paste line below
